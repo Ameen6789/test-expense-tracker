@@ -1,0 +1,17 @@
+[project]
+name = "demo-expense-tracker-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ameen6789", email = "azrucha@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = ["fastmcp"]
+
+[project.scripts]
+demo-expense-tracker-server = "demo_expense_tracker_server:main"
+
+[build-system]
+requires = ["uv_build>=0.13.4,<0.14.0"]
+build-backend = "uv_build"
