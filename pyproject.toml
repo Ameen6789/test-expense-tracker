@@ -7,7 +7,10 @@ authors = [
     { name = "ameen6789", email = "azrucha@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = ["fastmcp"]
+dependencies = [
+    "aiosqlite3>=0.3.0",
+    "fastmcp",
+]
 
 [project.scripts]
 demo-expense-tracker-server = "demo_expense_tracker_server:main"

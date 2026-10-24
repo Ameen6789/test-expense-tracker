@@ -1,24 +1,26 @@
 
 from fastmcp import FastMCP
-import sqlite3
+import aiosqlite3
 import os
 from contextlib import closing
+import tempfile
+TEMP_DIR=tempfile.gettempdir()
 
 mcp = FastMCP(name="expense tracker")
 
-db_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
+DB_PATH = os.path.join(
+    TEMP_DIR,
     "expense.db"
 )
 
 
-def get_connection():
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
+async def get_connection():
+    conn = aiosqlite3.connect(DB_PATH)
+    conn.row_factory = aiosqlite3.Row
     return conn
 
 
-def init_db():
+async def init_db():
     with closing(get_connection()) as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS expenses (
@@ -35,7 +37,7 @@ def init_db():
 
 
 @mcp.tool
-def add_expense(
+async def add_expense(
     category: str,
     sub_category: str,
     amount: float,
@@ -63,12 +65,12 @@ def add_expense(
                 "note": note
             }
 
-    except sqlite3.Error as e:
+    except aiosqlite3.Error as e:
         return {"error": str(e)}
 
 
 @mcp.tool
-def list_expense():
+async def list_expense():
     """List all expenses."""
     try:
         with closing(get_connection()) as conn:
@@ -78,7 +80,7 @@ def list_expense():
 
             return [dict(row) for row in rows]
 
-    except sqlite3.Error as e:
+    except aiosqlite3.Error as e:
         return {"error": str(e)}
     
 
@@ -93,7 +95,7 @@ def list_expense():
 
 #             return [dict(row) for row in rows]
 
-#     except sqlite3.Error as e:
+#     except aiosqlite3.Error as e:
 #         return {"error": str(e)}
 
 
