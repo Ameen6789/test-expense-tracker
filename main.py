@@ -119,9 +119,9 @@ DB_PATH = os.path.join(TEMP_DIR, "expense.db")
 mcp = FastMCP(name="expense tracker")
 
 
-def init_db():
-    with aiosqlite.connect(DB_PATH) as conn:
-        conn.execute("""
+async def init_db():
+    async with aiosqlite.connect(DB_PATH) as conn:
+        await conn.execute("""
             CREATE TABLE IF NOT EXISTS expenses (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 category TEXT NOT NULL,
@@ -131,7 +131,7 @@ def init_db():
                 date_created TIMESTAMP
             )
         """)
-        conn.commit()
+        await conn.commit()
 
 
 @mcp.tool
@@ -194,5 +194,5 @@ async def list_expense():
 
 
 if __name__ == "__main__":
-    init_db()
+    asyncio.run(init_db())
     mcp.run(transport="http", host="0.0.0.0", port=8000)
